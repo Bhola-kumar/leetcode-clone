@@ -4,6 +4,7 @@ import { switchAuthModal } from '@/store/slices/authSlice';
 import { auth } from '@/firebase/firebase';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 const Signup: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -26,19 +27,19 @@ const Signup: React.FC = () => {
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!inputs.email || !inputs.password || !inputs.displayName) return alert('Please fill all the fields');
+    if(!inputs.email || !inputs.password || !inputs.displayName) return toast.error('Please fill all the fields', { position: "top-center", autoClose: 3000, theme: "dark" });
     try{
         const newUser = await createUserWithEmailAndPassword(inputs.email, inputs.password);
         if(!newUser) return;
         router.push('/');
     }
     catch(error:any){
-      alert(error.message);
+      toast.error(error.message, { position: "top-center", autoClose: 3000, theme: "dark" }); 
     }
   }
   useEffect(() => {
     if(error){
-      alert(error.message);
+      toast.error(error.message, { position: "top-center", autoClose: 3000, theme: "dark" });
     }
   }, [error]);  
   return (
