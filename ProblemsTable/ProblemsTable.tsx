@@ -1,39 +1,32 @@
-import React from 'react';
-import { problems } from '@/mockProblems/problems';
-import { BsCheckCircle } from 'react-icons/bs';
-import Link from 'next/link';
-import { AiFillYoutube } from 'react-icons/ai';
+'use client';
+import { useState } from 'react';
+import ProblemsTableRow from './ProblemsTableRow';
+import YoutubeModal, { YoutubePlayerState } from './YoutubeModal';
 
-const ProblemsTable:React.FC = () => {
-    
+const ProblemsTable = () => {
+    const [youtubePlayer, setYoutubePlayer] = useState<YoutubePlayerState>({ videoId: '', isOpen: false });
+
     return (
-        <tbody className='text-white'>
-            {problems.map((doc,idx) =>{
-                const difficultyColor = doc.difficulty === 'Easy' ? 'text-dark-green-s' : doc.difficulty === 'Medium' ? 'text-dark-yellow' : 'text-dark-pink';  
-                return (
-                    <tr className={`${idx % 2 == 1 ? 'bg-dark-layer-1': ""}`} key={doc.id}>
-                        <th className='px-2 py-4 font-medium whitespace-nowrap text-dark-green-s'>
-                            <BsCheckCircle fontSize={"18"} width='18'/>
-                        </th>
-                        <td className='px-6 py-4'>
-                            <Link className="hover:text-blue-600 cursor-pointer" href={`/problems/${doc.id}`} > 
-                            {doc.title}
-                            </Link>
-                        </td>
-                        <td className={`px-6 py-4 ${difficultyColor}`}>{doc.difficulty}</td>
-                        <td className={`px-6 py-4 `}>{doc.category}</td>
-                        <td className={`px-6 py-4`}>
-                            {doc.videoId ? (
-                                <AiFillYoutube fontSize={28} className='hover:text-red-600 cursor-pointer' />): 
-                                (<p className='text-gray-400'>Coming Soon</p>)
-                            }
-                        </td>
+        <div className='relative overflow-x-auto mx-auto px-6 pb-10'>
+            <table className='text-sm text-left text-gray-500 dark:text-gray-400 sm:w-7/12 w-full max-w-[1200px] mx-auto'>
+                <thead className='text-xs text-gray-700 uppercase dark:text-gray-400 border-b'>
+                    <tr>
+                        <th scope='col' className='px-1 py-3 w-0 font-medium'>Status</th>
+                        <th scope='col' className='px-6 py-3 w-0 font-medium'>Title</th>
+                        <th scope='col' className='px-6 py-3 w-0 font-medium'>Difficulty</th>
+                        <th scope='col' className='px-6 py-3 w-0 font-medium'>Category</th>
+                        <th scope='col' className='px-6 py-3 w-0 font-medium'>Solution</th>
+                    </tr>
+                </thead>
+                <ProblemsTableRow setYoutubePlayer={setYoutubePlayer} />
+            </table>
 
-                    </tr>   
-                )
-            })
-        }
-        </tbody>
-    )
-}
+            <YoutubeModal 
+                youtubePlayer={youtubePlayer}
+                setYoutubePlayer={setYoutubePlayer}
+            />
+        </div>
+    );
+};
+
 export default ProblemsTable;
